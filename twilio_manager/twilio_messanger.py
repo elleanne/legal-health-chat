@@ -5,8 +5,11 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 from preprocess.query import preprocess_query
 from api_handler.query_api import api_req
+from model import get_response
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/database'
 
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
@@ -19,19 +22,16 @@ client = Client(account_sid, auth_token)
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number
-    body = request.values.get('Body', None)
-    print(body)
+    req_values = request.values
     
     ## send to preprocessing
-    user_data = preprocess_query(body)
+    user_data = preprocess_query(req_values)
 
     ## send preprocessed data to api -> gpt
-    response_text = api_req(user_data)
-        
+    response_text = get_response(user_data, 10)
+    print("response text", response_text)
     # Start our TwiML response
     resp = MessagingResponse()
-
-    # Determine the right reply for this message
     resp.message(response_text)
 
     return str(resp)

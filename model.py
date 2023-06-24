@@ -12,7 +12,10 @@ else:
 # number of most relevant legal documents
 n_best = 10
 
-
+def get_response(sent, n):
+    docs = getRelevantDocs(sent,n)
+    sent = f'{sent}. Explain with an eigth grade reading comprehension. Keep is short and simple.'
+    return generate_legal_answer(sent, docs)
 
 def getRelevantDocs(sentence, n):
     # find n most relevant legal documents that are relevant to `sentence`  
