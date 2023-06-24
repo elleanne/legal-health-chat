@@ -26,17 +26,13 @@ def incoming_sms():
     user_data = preprocess_query(body)
 
     ## send preprocessed data to api -> gpt
-    response_test = api_req(user_data)
+    response_text = api_req(user_data)
         
     # Start our TwiML response
     resp = MessagingResponse()
 
     # Determine the right reply for this message
-    if body == 'hello':
-        resp.message("Hi!")
-        
-    elif body == 'bye':
-        resp.message("Goodbye")
+    resp.message(response_text)
 
     return str(resp)
 
