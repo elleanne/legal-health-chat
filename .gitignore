@@ -1,0 +1,4 @@
+env/*
+.env
+run_manage.sh
+*/__pycache__
