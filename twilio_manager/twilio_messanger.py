@@ -4,12 +4,9 @@ from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 
 from preprocess.query import preprocess_query
-from api_handler.query_api import api_req
 from model import get_response
 
 app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/database'
 
 # Find your Account SID and Auth Token at twilio.com/console
 # and set the environment variables. See http://twil.io/secure
@@ -26,26 +23,19 @@ def incoming_sms():
     
     ## send to preprocessing
     user_data = preprocess_query(req_values)
-
+    print("user_data", user_data)
     ## send preprocessed data to api -> gpt
-    response_text = get_response(user_data, 10)
+    response_text = get_response(user_data, 15)
     print("response text", response_text)
     # Start our TwiML response
     resp = MessagingResponse()
     resp.message(response_text)
-
+    print('sending...')
     return str(resp)
-
-# def send_message(message, client_number):
-#     message = client.messages.create(
-#         body=message,
-#         from_=server_number,
-#         to=client_number
-#     )
 
 
 def run_server():
-    app.run(port=8000,debug=True)
+    app.run(port=8000,debug=False)
 
 if __name__ == "__main__":
     run_server()

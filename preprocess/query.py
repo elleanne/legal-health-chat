@@ -11,12 +11,6 @@ class UserQuery:
     from_country = ''
     # query_array = []
 
-def get_user_q_dict(query_obj):
-    return vars(query_obj)
-
-def keyword_search(text):
-    return []
-
 def preprocess_query(req_values):
     ''' create the query object'''
     ut_obj = UserQuery()
