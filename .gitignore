@@ -3,3 +3,4 @@ env/*
 run_manage.sh
 */__pycache__
 personal_git.pub
+requirements.txt
