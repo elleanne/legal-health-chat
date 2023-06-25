@@ -14,21 +14,20 @@ account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
 server_number = os.environ['SERVER_PHONE_NUMBER']
 client = Client(account_sid, auth_token)
-print("accessed client", client)
 
 @app.route("/sms", methods=['GET', 'POST'])
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number
     req_values = request.values
-    print(req_values)
+
     ## send to preprocessing
     user_data = preprocess_query(req_values)
-    print("user_data", user_data)
+
     ## send preprocessed data to api -> gpt
     response_text = get_response(user_data, 15)
     response_text += ' \nThis is not legal advice, just a search.'
-    print("response text", response_text)
+
     # Start our TwiML response
     resp = MessagingResponse()
     resp.message(response_text)
@@ -36,7 +35,6 @@ def incoming_sms():
     return str(resp)
 
 def run_server():
-    print("running server...")
     app.run()
 
 # if __name__ == "__main__":

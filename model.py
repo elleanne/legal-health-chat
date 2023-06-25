@@ -37,7 +37,7 @@ def check_is_legal_question(text):
       max_tokens=1000
     )
     res_bool = response.choices[0]['message']['content']
-    print(response.choices[0]['message'])
+
     if 'yes' in res_bool.lower():
         return True
 

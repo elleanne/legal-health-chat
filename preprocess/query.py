@@ -15,7 +15,6 @@ def preprocess_query(req_values):
     ''' create the query object'''
     ut_obj = UserQuery()
     ut_obj.query = req_values.get('Body', None)
-    # from_number = req_values.get('From', None)
     ut_obj.from_state = req_values.get('FromState', None).lower()
     ut_obj.from_country = req_values.get('FromCountry', None)
 
