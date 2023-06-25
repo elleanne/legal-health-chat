@@ -14,13 +14,14 @@ account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
 server_number = os.environ['SERVER_PHONE_NUMBER']
 client = Client(account_sid, auth_token)
+print("accessed client", client)
 
 @app.route("/sms", methods=['GET', 'POST'])
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number
     req_values = request.values
-    
+    print(req_values)
     ## send to preprocessing
     user_data = preprocess_query(req_values)
     print("user_data", user_data)
@@ -35,6 +36,7 @@ def incoming_sms():
     return str(resp)
 
 def run_server():
+    print("running server...")
     app.run()
 
 # if __name__ == "__main__":
