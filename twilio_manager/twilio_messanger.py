@@ -26,7 +26,7 @@ def incoming_sms():
 
     ## send preprocessed data to api -> gpt
     response_text = get_response(user_data, 15)
-    response_text += ' \nThis is not legal advice. You may want to consult a lawyer about this question.'
+    response_text += ' \nThis is not legal advice, consult a lawyer for your question.'
 
     # Start our TwiML response
     resp = MessagingResponse()
@@ -36,6 +36,3 @@ def incoming_sms():
 
 def run_server():
     app.run()
-
-# if __name__ == "__main__":
-#     run_server()

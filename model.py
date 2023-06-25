@@ -14,10 +14,18 @@ else:
 # number of most relevant legal documents
 n_best = 10
 
+def query_chat_gpt(msg):
+    return openai.ChatCompletion.create(
+      model="gpt-4-0613",
+      messages=msg,
+      temperature=0,
+      max_tokens=1000
+    )
+
 def get_response(sent, n):
     # get docs to pass to GPT 
     if check_is_legal_question(get_query_str(sent)):
-        docs = getRelevantDocs(get_query_str(sent), get_legislation_code(sent),n)
+        docs = getRelevantDocs(reformat_user_query(get_query_str(sent)), get_legislation_code(sent),n)
         # query GPT
         sent_str = f'{get_query_str(sent, get_state=True)}. Keep it short and simple.'
         return generate_legal_answer(sent_str, docs)
@@ -31,12 +39,7 @@ def check_is_legal_question(text):
     ]
     
     # send query to GPT
-    response = openai.ChatCompletion.create(
-      model="gpt-4-0613",
-      messages=msg,
-      temperature=0,
-      max_tokens=1000
-    )
+    response = query_chat_gpt(msg)
     res_bool = response.choices[0]['message']['content']
 
     if 'yes' in res_bool.lower():
@@ -66,8 +69,18 @@ def getRelevantDocs(sentence, legislation_code, n):
     json_data = json.loads(unicode_string)
     
     return [r['t'] for r in json_data]
-    
 
+def reformat_user_query(sentence):
+    msg=[
+          {"role": "system", "content": '''User ask legal question. Determine what information should be check in the law to
+            be check in the law to answer it. output it in the form of a series of questions'''},
+          {"role": "user", "content": sentence}
+    ]
+    # send query to GPT
+    response = query_chat_gpt(msg)
+
+    # return answer
+    return response.choices[0]['message']['content']
 
 def generate_legal_answer(inquiry, documents):
     # documents: a list of documents
@@ -91,24 +104,7 @@ def generate_legal_answer(inquiry, documents):
     ]
     
     # send query to GPT
-    response = openai.ChatCompletion.create(
-      model="gpt-4-0613",
-      messages=msg,
-      temperature=0,
-      max_tokens=1000
-    )
+    response = query_chat_gpt(msg)
 
     # return answer
     return response.choices[0]['message']['content']
-
-
-########################
-# example
-########################
-inquiry = "I am a pregnant 25-year-old woman. I am in jail because of theft. What are my rights?"
-# doc_list = getRelevantDocs(inquiry, n_best)
-# print(generate_legal_answer(inquiry, doc_list))
-'''
-As a pregnant woman in jail, you have certain rights. Under § 4051 of Chapter 303 of Title 18, a covered institution may not place a pregnant prisoner or a prisoner in post-partum recovery in a segregated housing unit unless the prisoner presents an immediate risk to herself or others. The placement should be limited and temporary. This means that you have the right not to be placed in restricted housing unless you are a risk to yourself or others. Additionally, under § 4322 of Chapter 317, restraints cannot be used on a prisoner during the period of pregnancy, labor, and post-partum recovery. This restriction begins after your pregnancy has been confirmed by healthcare professionals and lasts until post-partum recovery. Furthermore, under § 3596 of Chapter 228, a death sentence cannot be carried out upon a woman while she is pregnant. Finally, under § 1841 of Chapter 90A, nothing in this section shall be construed to permit the prosecution of any woman concerning her unborn child. Therefore, you have the right to proper medical attention during this period of your life, which extends to healthcare provided in a community confinement facility where you have access to necessary medical care, mental health care, and medicine in partnership with local health service providers, as per § 3621(i) of Chapter 229.
-'''
-
