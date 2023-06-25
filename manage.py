@@ -1,4 +1,4 @@
-from twilio_manager.twilio_messanger import run_server
+from twilio_manager.twilio_messanger import run_server, app
 
 def main():
     run_server()
