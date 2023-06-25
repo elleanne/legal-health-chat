@@ -25,7 +25,8 @@ def get_response(sent, n):
 
 def check_is_legal_question(text):
     msg=[
-          {"role": "system", "content": "Test whether this query is serious or just a joke. If it is serious, answer 'yes'. Otherwise, answer 'no'. Always answer yes or no, do not answer anything else"}, #"The user will submit a query and your job is to determine if the user's query contains a question. If yes, answer 'yes'. If no, answer 'no'."}, #lawyer. The user will ask a legal question and provide several relevant legal documents for your reference. Based on the user's question, you should search for relevant information in the legal documents that help answer it, and provide an answer that is supported by the information in the legal documents. The answer needs to be within 150 words. "+ doc_str},
+          {"role": "system", "content": '''Test whether this query is serious or just a joke. If it is serious, answer 'yes'. 
+           Otherwise, answer 'no'. Always answer yes or no, do not answer anything else'''}, 
           {"role": "user", "content": text}
     ]
     
@@ -82,7 +83,10 @@ def generate_legal_answer(inquiry, documents):
         ind += 1
         
     msg=[
-          {"role": "system", "content": "You are a lawyer. The user will ask a legal question and provide several relevant legal documents for your reference. Based on the user's question, you should search for relevant information in the legal documents that help answer it, and provide an answer that is supported by the information in the legal documents. The answer needs to be within 150 words. "+ doc_str},
+          {"role": "system", "content": '''You are a lawyer. The user will ask a legal question and provide several relevant legal documents for your reference.
+           Based on the user's question, you should search for relevant information in the legal documents that help answer it, and provide an answer that is 
+           supported by the information in the legal documents. The answer needs to be within 150 words. Do not mention that you used supporting documents, 
+           but, if possible, mention the section of the law that you used to build your answer. '''+ doc_str},
           {"role": "user", "content": input_str}
     ]
     
