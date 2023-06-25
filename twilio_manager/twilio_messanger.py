@@ -26,13 +26,13 @@ def incoming_sms():
     print("user_data", user_data)
     ## send preprocessed data to api -> gpt
     response_text = get_response(user_data, 15)
+    response_text += ' \nThis is not legal advice, just a search.'
     print("response text", response_text)
     # Start our TwiML response
     resp = MessagingResponse()
     resp.message(response_text)
-    print('sending...')
-    return str(resp)
 
+    return str(resp)
 
 def run_server():
     app.run(port=8000,debug=False)
