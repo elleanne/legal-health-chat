@@ -3,6 +3,8 @@ import openai
 import requests
 import json
 
+from preprocess.query import get_legislation_code, get_query_str
+
 api_key = os.getenv("OPENAI_API_KEY", "")
 if api_key != "":
     openai.api_key = api_key
@@ -14,11 +16,11 @@ n_best = 10
 
 def get_response(sent, n):
     # get docs to pass to GPT 
-    if check_is_legal_question(sent):
-        docs = getRelevantDocs(sent,n)
+    if check_is_legal_question(get_query_str(sent)):
+        docs = getRelevantDocs(get_query_str(sent), get_legislation_code(sent),n)
         # query GPT
-        sent = f'{sent}. Keep it short and simple.'
-        return generate_legal_answer(sent, docs)
+        sent_str = f'{get_query_str(sent, get_state=True)}. Keep it short and simple.'
+        return generate_legal_answer(sent_str, docs)
     return 'You must ask a valid legal question.'
 
 def check_is_legal_question(text):
@@ -41,14 +43,15 @@ def check_is_legal_question(text):
 
     return False
 
-def getRelevantDocs(sentence, n):
+def getRelevantDocs(sentence, legislation_code, n):
     # find n most relevant legal documents that are relevant to `sentence`  
     # returns those documents in a list from a secondary API
 
     base_url = 'http://lawapi.xyz/query'
     query_json = json.dumps({
         'n': n,
-        'query': sentence
+        'query': sentence,
+        "legislation" : legislation_code
     })
     headers = {
         'Content-Type': 'application/json'

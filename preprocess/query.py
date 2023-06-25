@@ -1,5 +1,5 @@
 import json
-
+from location_codes import locations
 class UserQuery:
     query = ""
     num_docs = 10
@@ -16,7 +16,18 @@ def preprocess_query(req_values):
     ut_obj = UserQuery()
     ut_obj.query = req_values.get('Body', None)
     # from_number = req_values.get('From', None)
-    ut_obj.from_state = req_values.get('FromState', None)
+    ut_obj.from_state = req_values.get('FromState', None).lower()
     ut_obj.from_country = req_values.get('FromCountry', None)
 
-    return f'{ut_obj.query} in {ut_obj.from_state}, {ut_obj.from_country}'
+
+    return ut_obj
+
+def get_query_str(ut_obj, get_state=False):
+    if get_state and ut_obj.from_state in  ['ca', 'california']:
+        return f'{ut_obj.query} in {ut_obj.from_state}, {ut_obj.from_country}'
+    return str(ut_obj.query)
+
+def get_legislation_code(ut_obj, get_state=False):
+    if get_state and ut_obj.from_state in  ['ca', 'california']:
+        return locations.get(ut_obj)
+    return locations.get('usa')
