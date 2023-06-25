@@ -72,8 +72,8 @@ def getRelevantDocs(sentence, legislation_code, n):
 
 def reformat_user_query(sentence):
     msg=[
-          {"role": "system", "content": '''User ask legal question. Determine what information should be check in the law to
-            be check in the law to answer it. output it in the form of a series of questions'''},
+          {"role": "system", "content": '''User asks a legal question. Generalize it so it can be sent to a retrieval model. 
+           Specify it so it can be sent to a retrieval model. No other text.'''},
           {"role": "user", "content": sentence}
     ]
     # send query to GPT
