@@ -1,4 +1,4 @@
-# legal-health-chat
+# legal-health-chat : LawSage
 **Description:** legal question-answer model for answering legal questions
 
 *Text to: 855-653-2629*

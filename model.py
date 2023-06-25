@@ -14,10 +14,32 @@ n_best = 10
 
 def get_response(sent, n):
     # get docs to pass to GPT 
-    docs = getRelevantDocs(sent,n)
-    # query GPT
-    sent = f'{sent}. Keep it short and simple.'
-    return generate_legal_answer(sent, docs)
+    if check_is_legal_question(sent):
+        docs = getRelevantDocs(sent,n)
+        # query GPT
+        sent = f'{sent}. Keep it short and simple.'
+        return generate_legal_answer(sent, docs)
+    return 'You must ask a valid legal question.'
+
+def check_is_legal_question(text):
+    msg=[
+          {"role": "system", "content": "Test whether this query is serious or just a joke. If it is serious, answer 'yes'. Otherwise, answer 'no'. Always answer yes or no, do not answer anything else"}, #"The user will submit a query and your job is to determine if the user's query contains a question. If yes, answer 'yes'. If no, answer 'no'."}, #lawyer. The user will ask a legal question and provide several relevant legal documents for your reference. Based on the user's question, you should search for relevant information in the legal documents that help answer it, and provide an answer that is supported by the information in the legal documents. The answer needs to be within 150 words. "+ doc_str},
+          {"role": "user", "content": text}
+    ]
+    
+    # send query to GPT
+    response = openai.ChatCompletion.create(
+      model="gpt-3.5-turbo-16k",
+      messages=msg,
+      temperature=0,
+      max_tokens=1000
+    )
+    res_bool = response.choices[0]['message']['content']
+    print(response.choices[0]['message'])
+    if 'yes' in res_bool.lower():
+        return True
+
+    return False
 
 def getRelevantDocs(sentence, n):
     # find n most relevant legal documents that are relevant to `sentence`  
