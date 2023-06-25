@@ -1,1 +1,1 @@
-web: python twilio_messanger.py
+web: python manage.py
