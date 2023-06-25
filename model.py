@@ -16,7 +16,7 @@ n_best = 10
 
 def query_chat_gpt(msg):
     return openai.ChatCompletion.create(
-      model="gpt-4-0613",
+      model="gpt-3.5-turbo-16k",
       messages=msg,
       temperature=0,
       max_tokens=1000
