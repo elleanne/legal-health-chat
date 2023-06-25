@@ -37,5 +37,5 @@ def incoming_sms():
 def run_server():
     app.run()
 
-if __name__ == "__main__":
-    run_server()
+# if __name__ == "__main__":
+#     run_server()
