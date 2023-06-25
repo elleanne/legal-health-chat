@@ -88,7 +88,7 @@ def generate_legal_answer(inquiry, documents):
     
     # send query to GPT
     response = openai.ChatCompletion.create(
-      model="gpt-3.5-turbo-16k",
+      model="gpt-4-0613",
       messages=msg,
       temperature=0,
       max_tokens=1000
