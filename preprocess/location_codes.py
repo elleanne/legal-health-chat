@@ -1,1 +1,0 @@
-locations = {'ca':'usa_ca', 'us':'usa_code', 'usa':'usa_code', 'usf':'usa_cfr'}

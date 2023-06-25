@@ -1,5 +1,5 @@
 import json
-from location_codes import locations
+locations = {'ca':'usa_ca', 'us':'usa_code', 'usa':'usa_code', 'usf':'usa_cfr'}
 class UserQuery:
     query = ""
     num_docs = 10
